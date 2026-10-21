@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord - Gestion Scolaire</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <header class="topbar" id="topbar"></header>
+
+  <main class="main-content">
+    <div class="page-content">
+      <div class="dashboard-welcome">
+        <h1 id="welcomeText">Tableau de bord</h1>
+        <p id="welcomeDate"></p>
+      </div>
+
+      <div class="stat-cards" id="statCards"></div>
+      <div class="quick-actions" id="quickActions"></div>
+
+      <div class="grid-2">
+        <div class="chart-container">
+          <h3>Évolution des inscriptions</h3>
+          <div class="chart-bars-vertical">
+            <span style="height:35%"></span><span style="height:48%"></span><span style="height:60%"></span><span style="height:70%"></span><span style="height:86%"></span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <h3>Répartition des élèves par classe</h3>
+          <div class="chart-horizontal">
+            <div><label>CP</label><div><span style="width:78%"></span></div></div>
+            <div><label>CE1</label><div><span style="width:68%"></span></div></div>
+            <div><label>CE2</label><div><span style="width:58%"></span></div></div>
+            <div><label>CM1</label><div><span style="width:49%"></span></div></div>
+            <div><label>CM2</label><div><span style="width:46%"></span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-header"><h3>Derniers élèves inscrits</h3><a href="eleves.html" class="btn btn-outline btn-sm">Voir tout</a></div>
+        <div class="card-body">
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Élève</th><th>Matricule</th><th>Classe</th><th>Inscrit le</th><th>Statut</th></tr></thead>
+              <tbody>
+                <tr><td>Amine Diop</td><td>2024-014</td><td>CM2</td><td>12/09/2024</td><td><span class="badge badge-success">Actif</span></td></tr>
+                <tr><td>Sarah Mendy</td><td>2024-015</td><td>CE2</td><td>13/09/2024</td><td><span class="badge badge-success">Actif</span></td></tr>
+                <tr><td>Yacine Fall</td><td>2024-016</td><td>CP</td><td>15/09/2024</td><td><span class="badge badge-warning">À vérifier</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if (!Auth.requireAuth()) throw new Error('Non autorisé');
+    App.init();
+    document.getElementById('welcomeText').textContent = 'Bonjour ' + Auth.getCurrentUser().prenom;
+    document.getElementById('welcomeDate').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+    const stats = [
+      { label: 'Élèves', value: '246', icon: '🎓', tone: 'blue' },
+      { label: 'Enseignants', value: '18', icon: '👨‍🏫', tone: 'green' },
+      { label: 'Absences', value: '12', icon: '📉', tone: 'orange' },
+      { label: 'Paiements', value: '96%', icon: '💰', tone: 'purple' }
+    ];
+    document.getElementById('statCards').innerHTML = stats.map(s => `
+      <div class="stat-card">
+        <div class="stat-icon ${s.tone}">${s.icon}</div>
+        <div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>
+      </div>
+    `).join('');
+
+    document.getElementById('quickActions').innerHTML = `
+      <a class="quick-action" href="eleves.html">👩‍🎓 Élèves</a>
+      <a class="quick-action" href="notes.html">📝 Notes</a>
+      <a class="quick-action" href="absences.html">🚫 Absences</a>
+      <a class="quick-action" href="paiements.html">💳 Paiements</a>
+    `;
+  </script>
+</body>
+</html>

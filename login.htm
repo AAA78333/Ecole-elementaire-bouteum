@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion – École Boutum</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="login-page">
+    <main class="login-shell">
+      <section class="login-card">
+        <div class="login-header">
+          <span class="brand-mark">É</span>
+          <h1>Connexion</h1>
+        </div>
+
+        <form id="loginForm" class="login-form" novalidate>
+          <label>
+            <span>Email</span>
+            <input id="email" type="email" name="email" placeholder="prenom@boutum-ecole.fr" required />
+          </label>
+
+          <label>
+            <span>Mot de passe</span>
+            <input id="password" type="password" name="password" placeholder="••••••••" required />
+          </label>
+
+          <div id="loginMessage" class="login-message" aria-live="polite"></div>
+
+          <button type="submit" class="btn btn-primary full-width">Se connecter</button>
+        </form>
+
+        <p class="login-helper">Compte de démonstration : <strong>parent@boutum-ecole.fr</strong> / <strong>Boutum2024!</strong></p>
+
+        <p class="login-footer">
+          <a href="index.html">Retour à l'accueil</a>
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const validCredentials = {
+        'parent@boutum-ecole.fr': 'Boutum2024!',
+        'direction@boutum-ecole.fr': 'Ecole2024!',
+        'enseignant@boutum-ecole.fr': 'Classe2024!'
+      };
+
+      const form = document.getElementById('loginForm');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const messageBox = document.getElementById('loginMessage');
+
+      function showMessage(type, text) {
+        messageBox.textContent = text;
+        messageBox.className = `login-message ${type}`;
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const email = emailInput.value.trim().toLowerCase();
+        const password = passwordInput.value.trim();
+
+        if (!email || !password) {
+          showMessage('error', 'Veuillez remplir tous les champs.');
+          return;
+        }
+
+        const expectedPassword = validCredentials[email];
+
+        if (!expectedPassword) {
+          showMessage('error', 'Adresse e-mail introuvable.');
+          return;
+        }
+
+        if (password !== expectedPassword) {
+          showMessage('error', 'Mot de passe incorrect.');
+          return;
+        }
+
+        localStorage.setItem('schoolAuth', JSON.stringify({
+          login: email,
+          prenom: email.split('@')[0],
+          role: 'parent'
+        }));
+        showMessage('success', 'Connexion réussie. Redirection…');
+        window.setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 800);
+      });
+    </script>
+  </body>
+</html>
